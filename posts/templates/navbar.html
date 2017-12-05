@@ -1,0 +1,38 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="{% url 'more:list' %}">Hamza's Blog</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'more:list' %}">Home<span class="sr-only">(current)</span></a>
+      </li>
+      {% if request.user.is_staff %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'more:create' %}">Create Post</a>
+        </li>
+      {% endif %}
+      {% if request.user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'more:logout' %}">Logout</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled">{{request.user}}</a>
+        </li>
+      {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'more:login' %}">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'more:signup' %}">Signup</a>
+        </li>
+      {% endif %}
+    </ul>
+    <form class="form-inline my-2 my-lg-0" action="{% url 'more:list' %}" method="GET">
+      <input class="form-control mr-sm-2" name='q' type="search" placeholder="Search" aria-label="Search" value="{{request.GET.q}}">
+      <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav>

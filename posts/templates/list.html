@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block heading %}
+	List
+{% endblock heading %}
+
+{% block content %}
+	
+	<div class="jumbotron">
+		<h1 class="display-3">These are my posts!</h1>
+	</div>
+	
+	<div class="row">
+	{% for item in post_items %}
+		<div class="card col-xs-12 col-md-6" style="width: 20rem;">
+			{% if item.img %}
+				<img class="card-img-top" src="{{item.img.url}}" alt="Card image cap">
+			{% endif %}
+			<div class="card-body">
+				<h4 class="card-title">
+					{{item.title}}
+					<small>{{item.publish_date|timesince}}</small>
+					{% if item.draft %}
+						<span class="text-danger">Draft</span>
+					{% endif %}
+					{% if item.publish_date > today %}
+						<span class="text-success">Future Post</span>
+					{% endif %}
+				</h4>
+				<p class="card-text">{{item.content|linebreaks|truncatechars:30}}</p>
+				<p class="card-text">{{item.author.username}}</p>
+				<p class="card-text">{{item.author.get_full_name}}</p>
+				<p class="card-text">{{item.author.last_login}}</p>
+				<p class="card-text">{{item.author.date_joined}}</p>
+				<a href="{% url 'more:detail' post_slug=item.slug %}" class="btn btn-info">Read More <i class="fa fa-book" aria-hidden="true"></i></a>
+				<a href="{% url 'more:update' post_slug=item.slug %}" class="btn btn-warning">Update <i class="fa fa-pencil" aria-hidden="true"></i></a>
+				<a href="{% url 'more:delete' post_slug=item.slug %}" class="btn btn-danger">Delete <i class="fa fa-trash" aria-hidden="true"></i></a>
+
+			</div>
+		</div>
+	{% empty %}
+		<h1 class="text-danger">Sorry, there are no results for {{request.GET.q}}</h1>
+	{% endfor %}
+	</div>
+	<div class="pagination">
+    <span class="step-links">
+        {% if post_items.has_previous %}
+            <a href="?page={{ post_items.previous_page_number }}&q={{request.GET.q}}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ post_items.number }} of {{ post_items.paginator.num_pages }}.
+        </span>
+
+        {% if post_items.has_next %}
+            <a href="?page={{ post_items.next_page_number }}&q={{request.GET.q}}">next</a>
+        {% endif %}
+    </span>
+	</div>
+{% endblock content %}
